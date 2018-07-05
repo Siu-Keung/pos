@@ -1,7 +1,5 @@
 'use strict';
 
-
-// ①
 function getGoodsIdList(goodsIdList) {
   let uniqueList = [];
   for (let goodsId of goodsIdList) {
@@ -17,7 +15,6 @@ function getGoodsIdList(goodsIdList) {
   return resultList;
 }
 
-//②
 function setBuyNum(idArray, goodsList) {
   for (let goods of goodsList) {
     let count = 0;
@@ -34,10 +31,6 @@ function setBuyNum(idArray, goodsList) {
   return goodsList;
 }
 
-// ③
-// [{"id": "ITEM000001", "num": 5, "name": "雪碧", "unit": "瓶", "price": 3},
-//   {"id": "ITEM000003", "num": 2.5, "name": "荔枝", "unit": "斤", "price": 15},
-//   {"id": "ITEM000005", "num": 3, "name": "方便面", "unit": "袋", "price": 4.5}]
 function loadGoodsDetails(goodsList) {
   let allGoodsList = loadAllItems();
   for (let goods of goodsList) {
@@ -59,6 +52,7 @@ function addDiscountStatus(goodsDetailsList) {
   for(let goodsDetails of goodsDetailsList){
       goodsDetails.hasDiscount = hasDiscount(goodsDetails, loadPromotions());
   }
+  console.log(JSON.stringify(goodsDetailsList))
 }
 
 function hasDiscount(goodsDetails, discountList){
@@ -75,7 +69,6 @@ function hasDiscount(goodsDetails, discountList){
     }
 }
 
-// ⑤
 function setPayNum(goodsDetailsList) {
   for (let goodsDetails of goodsDetailsList) {
     goodsDetails.payNum = goodsDetails.num;
@@ -118,16 +111,11 @@ function printReceipt(tags) {
   let goodsList = getGoodsIdList(tags);
   setBuyNum(tags, goodsList);
   loadGoodsDetails(goodsList);
-
   addDiscountStatus(goodsList);
   console.log(JSON.stringify(goodsList));
-
   setPayNum(goodsList);
-
   let finalResult = setPrices(goodsList);
-  console.log(JSON.stringify(finalResult));
-
-
+  // console.log(JSON.stringify(finalResult));
   let formatStr = formatReceiptStr(finalResult);
   console.log(formatStr);
 }
