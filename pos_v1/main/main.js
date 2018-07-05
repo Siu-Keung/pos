@@ -1,8 +1,6 @@
 'use strict';
 
 
-
-
 // ①
 function getGoodsIdList(goodsIdList) {
   let uniqueList = [];
@@ -58,85 +56,75 @@ function getGoodsDetails(goodsList) {
   return goodsList;
 }
 
-function hasDiscount(goodsDetails){
-  let discountGoodsList = loadPromotions()[0].barcodes;
-  for(let discountGoodsId of discountGoodsList){
-    if(discountGoodsId === goodsDetails.id){
-      return true;
-    }
+function addDiscountStatus(goodsDetailsList) {
+  for(let goodsDetails of goodsDetailsList){
+      goodsDetails.hasDiscount = hasDiscount(goodsDetails, loadPromotions());
   }
-  return false;
 }
 
-// ④
-// True or False
-function hasDiscount(goodsDetails){
-  let discountGoodsList = loadPromotions()[0].barcodes;
-  for(let discountGoodsId of discountGoodsList){
-    if(discountGoodsId === goodsDetails.id){
-      return true;
+function hasDiscount(goodsDetails, discountList){
+    for(let discount of discountList){
+        //如果是买二送一活动的话
+        if(discount.type === 'BUY_TWO_GET_ONE_FREE'){
+            let discountIdList = discount.barcodes;
+            for(let id of discountIdList){
+                if(id === goodsDetails.id)
+                  return true;
+            }
+            return false;
+        }
     }
-  }
-  return false;
 }
 
 // ⑤
-function calculatePayNum(goodsDetailsList){
-  for(let goodsDetails of goodsDetailsList){
+function calculatePayNum(goodsDetailsList) {
+  for (let goodsDetails of goodsDetailsList) {
     goodsDetails.payNum = goodsDetails.num;
-    if(goodsDetails.hasDiscount){
-      let discountNum = 0;
-      let previousNum = 0;
-      for(let i = 0; i < goodsDetails.num; i++){
-        if(discountNum + discountNum * 2 <= goodsDetails.num){
-          previousNum = discountNum++;
-        }
-      }
-      goodsDetails.payNum -= previousNum;
+    if (goodsDetails.hasDiscount) {
+      goodsDetails.payNum = goodsDetails.num - parseInt(goodsDetails.num / 3);
     }
   }
   return goodsDetailsList;
 }
 
 // ⑥
-function countSubTotal(goodsDetailsList){
-  for(let goodsDetails of goodsDetailsList){
+function countSubTotal(goodsDetailsList) {
+  for (let goodsDetails of goodsDetailsList) {
     goodsDetails.subTotal = goodsDetails.payNum * goodsDetails.price;
   }
   return goodsDetailsList;
 }
 
 // ⑦
-function countOriginalSubTotal(goodsDetailsList){
-  for(let goodsDetails of goodsDetailsList){
+function countOriginalSubTotal(goodsDetailsList) {
+  for (let goodsDetails of goodsDetailsList) {
     goodsDetails.originalSubTotal = goodsDetails.num * goodsDetails.price;
   }
   return goodsDetailsList;
 }
 
 //⑧
-function countAllTotal(goodsDetailsList){
+function countAllTotal(goodsDetailsList) {
   let total = 0;
-  for(let goodsDetails of goodsDetailsList){
+  for (let goodsDetails of goodsDetailsList) {
     total += goodsDetails.subTotal;
   }
   return total;
 }
 
 //⑨
-function countAllDiscount(goodsDetailsList){
+function countAllDiscount(goodsDetailsList) {
   let discount = 0;
-  for(let goodsDetails of goodsDetailsList){
+  for (let goodsDetails of goodsDetailsList) {
     discount += goodsDetails.originalSubTotal - goodsDetails.subTotal;
   }
   return discount;
 }
 
-
-function output(receipt){
+function formatReceiptStr(receipt) {
   let total = receipt.total, discount = receipt.discount, items = receipt.items;
   let str = '***<没钱赚商店>收据***';
-  for(let item of items){
+  for (let item of items) {
     let tempStr = '\n名称：' + item.name + '，数量：' + item.num + item.unit +
       '，单价：' + item.price.toFixed(2) + '(元)，小计：' + item.subTotal.toFixed(2) + '(元)';
     str += tempStr;
@@ -145,38 +133,24 @@ function output(receipt){
   str += '\n总计：' + total.toFixed(2) + '(元)';
   str += '\n节省：' + discount.toFixed(2) + '(元)';
   str += '\n**********************';
-  alert(str);
-  console.log(str);
+  return str;
 }
 
-
-var input = [
-  'ITEM000001',
-  'ITEM000001',
-  'ITEM000001',
-  'ITEM000001',
-  'ITEM000001',
-  'ITEM000003-2.5',
-  'ITEM000005',
-  'ITEM000005-2',
-];
-
 function printReceipt(tags) {
-  var goodsList = getBuyNum(tags, getGoodsIdList(input));
+  let goodsList = getGoodsIdList(tags);
+  goodsList = getBuyNum(tags, goodsList);
   goodsList = getGoodsDetails(goodsList);
-  for(var goods of goodsList){
-      goods.hasDiscount = false;
-      if(hasDiscount(goods))
-          goods.hasDiscount = true;
-  };
+  addDiscountStatus(goodsList);
+  console.log(JSON.stringify(goodsList));
   goodsList = calculatePayNum(goodsList);
   goodsList = countSubTotal(goodsList);
   goodsList = countOriginalSubTotal(goodsList);
-  var finalResult = {};
+  let finalResult = {};
   finalResult.items = goodsList;
   finalResult.total = countAllTotal(goodsList);
   finalResult.discount = countAllDiscount(goodsList)
-  output(finalResult);
+  let formatStr = formatReceiptStr(finalResult);
+  console.log(formatStr);
 }
 
 

@@ -1,5 +1,31 @@
 'use strict';
 
+
+describe('addDiscountStatus', () => {
+
+  it('should print array', () => {
+
+    const tags = [
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000001',
+      'ITEM000003-2.5',
+      'ITEM000005',
+      'ITEM000005-2',
+    ];
+
+    spyOn(console, 'log');
+
+    printReceipt(tags);
+
+    const expectText = '[{"id":"ITEM000001","num":5,"name":"雪碧","unit":"瓶","price":3,"hasDiscount":true},{"id":"ITEM000003","num":2.5,"name":"荔枝","unit":"斤","price":15,"hasDiscount":false},{"id":"ITEM000005","num":3,"name":"方便面","unit":"袋","price":4.5,"hasDiscount":true}]';
+
+    expect(console.log).toHaveBeenCalledWith(expectText);
+  });
+});
+
 describe('pos', () => {
 
   it('should print text', () => {
