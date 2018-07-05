@@ -114,10 +114,8 @@ function printReceipt(tags) {
   setBuyNum(tags, goodsList);
   loadGoodsDetails(goodsList);
   addDiscountStatus(goodsList);
-  console.log(JSON.stringify(goodsList));
   setPayNum(goodsList);
   let finalResult = setPrices(goodsList);
-  // console.log(JSON.stringify(finalResult));
   let formatStr = formatReceiptStr(finalResult);
   console.log(formatStr);
 }
