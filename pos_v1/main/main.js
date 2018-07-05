@@ -18,7 +18,7 @@ function getGoodsIdList(goodsIdList) {
 }
 
 //②
-function getBuyNum(idArray, goodsList) {
+function setBuyNum(idArray, goodsList) {
   for (let goods of goodsList) {
     let count = 0;
     for (let idAndNum of idArray) {
@@ -34,12 +34,11 @@ function getBuyNum(idArray, goodsList) {
   return goodsList;
 }
 
-
 // ③
 // [{"id": "ITEM000001", "num": 5, "name": "雪碧", "unit": "瓶", "price": 3},
 //   {"id": "ITEM000003", "num": 2.5, "name": "荔枝", "unit": "斤", "price": 15},
 //   {"id": "ITEM000005", "num": 3, "name": "方便面", "unit": "袋", "price": 4.5}]
-function getGoodsDetails(goodsList) {
+function loadGoodsDetails(goodsList) {
   let allGoodsList = loadAllItems();
   for (let goods of goodsList) {
     let goodsDetails = null;
@@ -77,7 +76,7 @@ function hasDiscount(goodsDetails, discountList){
 }
 
 // ⑤
-function calculatePayNum(goodsDetailsList) {
+function setPayNum(goodsDetailsList) {
   for (let goodsDetails of goodsDetailsList) {
     goodsDetails.payNum = goodsDetails.num;
     if (goodsDetails.hasDiscount) {
@@ -85,40 +84,6 @@ function calculatePayNum(goodsDetailsList) {
     }
   }
   return goodsDetailsList;
-}
-
-// ⑥
-function countSubTotal(goodsDetailsList) {
-  for (let goodsDetails of goodsDetailsList) {
-    goodsDetails.subTotal = goodsDetails.payNum * goodsDetails.price;
-  }
-  return goodsDetailsList;
-}
-
-// ⑦
-function countOriginalSubTotal(goodsDetailsList) {
-  for (let goodsDetails of goodsDetailsList) {
-    goodsDetails.originalSubTotal = goodsDetails.num * goodsDetails.price;
-  }
-  return goodsDetailsList;
-}
-
-//⑧
-function countAllTotal(goodsDetailsList) {
-  let total = 0;
-  for (let goodsDetails of goodsDetailsList) {
-    total += goodsDetails.subTotal;
-  }
-  return total;
-}
-
-//⑨
-function countAllDiscount(goodsDetailsList) {
-  let discount = 0;
-  for (let goodsDetails of goodsDetailsList) {
-    discount += goodsDetails.originalSubTotal - goodsDetails.subTotal;
-  }
-  return discount;
 }
 
 function formatReceiptStr(receipt) {
@@ -136,19 +101,33 @@ function formatReceiptStr(receipt) {
   return str;
 }
 
+function setPrices(goodsList){
+    let totalPrice = 0, totalDiscount = 0;
+    for(let goodsItem of goodsList){
+        let subTotal = goodsItem.payNum * goodsItem.price;
+        let subDiscount = goodsItem.num * goodsItem.price - subTotal;
+        goodsItem.subTotal = subTotal;
+        totalPrice += subTotal;
+        totalDiscount += subDiscount;
+    }
+    let result = {total : totalPrice, discount : totalDiscount, items : goodsList };
+    return result;
+}
+
 function printReceipt(tags) {
   let goodsList = getGoodsIdList(tags);
-  goodsList = getBuyNum(tags, goodsList);
-  goodsList = getGoodsDetails(goodsList);
+  setBuyNum(tags, goodsList);
+  loadGoodsDetails(goodsList);
+
   addDiscountStatus(goodsList);
   console.log(JSON.stringify(goodsList));
-  goodsList = calculatePayNum(goodsList);
-  goodsList = countSubTotal(goodsList);
-  goodsList = countOriginalSubTotal(goodsList);
-  let finalResult = {};
-  finalResult.items = goodsList;
-  finalResult.total = countAllTotal(goodsList);
-  finalResult.discount = countAllDiscount(goodsList)
+
+  setPayNum(goodsList);
+
+  let finalResult = setPrices(goodsList);
+  console.log(JSON.stringify(finalResult));
+
+
   let formatStr = formatReceiptStr(finalResult);
   console.log(formatStr);
 }
