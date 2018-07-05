@@ -95,6 +95,7 @@ function formatReceiptStr(receipt) {
 }
 
 function setPrices(goodsList){
+
     let totalPrice = 0, totalDiscount = 0;
     for(let goodsItem of goodsList){
         let subTotal = goodsItem.payNum * goodsItem.price;
@@ -104,6 +105,7 @@ function setPrices(goodsList){
         totalDiscount += subDiscount;
     }
     let result = {total : totalPrice, discount : totalDiscount, items : goodsList };
+    console.log(JSON.stringify(result));
     return result;
 }
 
