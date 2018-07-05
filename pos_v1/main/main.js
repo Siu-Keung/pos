@@ -161,8 +161,8 @@ var input = [
   'ITEM000005-2',
 ];
 
-function printReceipt() {
-  var goodsList = getBuyNum(input, getGoodsIdList(input));
+function printReceipt(tags) {
+  var goodsList = getBuyNum(tags, getGoodsIdList(input));
   goodsList = getGoodsDetails(goodsList);
   for(var goods of goodsList){
       goods.hasDiscount = false;
