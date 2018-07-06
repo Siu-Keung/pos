@@ -48,33 +48,40 @@ function loadGoodsDetails(goodsList) {
   return goodsList;
 }
 
-function addDiscountStatus(goodsDetailsList) {
-  for(let goodsDetails of goodsDetailsList){
-      goodsDetails.hasDiscount = hasDiscount(goodsDetails, loadPromotions());
-  }
-  console.log(JSON.stringify(goodsDetailsList))
-}
+// function addDiscountStatus(goodsDetailsList) {
+//   for(let goodsDetails of goodsDetailsList){
+//       goodsDetails.hasDiscount = hasDiscount(goodsDetails, loadPromotions());
+//   }
+//   console.log(JSON.stringify(goodsDetailsList))
+// }
 
-function hasDiscount(goodsDetails, discountList){
+function countDiscount(goodsDetails, discountList){
     for(let discount of discountList){
         //如果是买二送一活动的话
         if(discount.type === 'BUY_TWO_GET_ONE_FREE'){
-            let discountIdList = discount.barcodes;
-            for(let id of discountIdList){
-                if(id === goodsDetails.id)
-                  return true;
-            }
-            return false;
+           promote_buyTwoGetOneFree(goodsDetails, discount.barcodes);
         }
     }
 }
 
+function promote_buyTwoGetOneFree(goodsDetails, discountBarcodes){
+  for(let barcode of discountBarcodes){
+    if(barcode === goodsDetails.id)
+      goodsDetails.payNum = goodsDetails.num - parseInt(goodsDetails.num / 3);
+  }
+}
+
 function setPayNum(goodsDetailsList) {
   for (let goodsDetails of goodsDetailsList) {
+    // goodsDetails.payNum = goodsDetails.num;
+    // if (goodsDetails.hasDiscount) {
+    //   goodsDetails.payNum = goodsDetails.num - parseInt(goodsDetails.num / 3);
+    // }
+
     goodsDetails.payNum = goodsDetails.num;
-    if (goodsDetails.hasDiscount) {
-      goodsDetails.payNum = goodsDetails.num - parseInt(goodsDetails.num / 3);
-    }
+    countDiscount(goodsDetails, loadPromotions());
+
+
   }
   return goodsDetailsList;
 }
@@ -113,7 +120,7 @@ function printReceipt(tags) {
   let goodsList = getGoodsIdList(tags);
   setBuyNum(tags, goodsList);
   loadGoodsDetails(goodsList);
-  addDiscountStatus(goodsList);
+  // addDiscountStatus(goodsList);
   setPayNum(goodsList);
   let finalResult = setPrices(goodsList);
   let formatStr = formatReceiptStr(finalResult);
