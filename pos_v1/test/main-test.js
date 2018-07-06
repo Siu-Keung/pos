@@ -1,40 +1,40 @@
 'use strict';
 
 
-describe('addDiscountStatus()', () => {
+// describe('addDiscountStatus()', () => {
+//
+//   it('should print array', () => {
+//
+//     const tags = [{"id":"ITEM000001","num":5,"name":"雪碧","unit":"瓶","price":3},
+//       {"id":"ITEM000003","num":2.5,"name":"荔枝","unit":"斤","price":15},
+//       {"id":"ITEM000005","num":3,"name":"方便面","unit":"袋","price":4.5}];
+//
+//     spyOn(console, 'log');
+//
+//     addDiscountStatus(tags)
+//
+//     const expectText = '[{"id":"ITEM000001","num":5,"name":"雪碧","unit":"瓶","price":3,"hasDiscount":true},{"id":"ITEM000003","num":2.5,"name":"荔枝","unit":"斤","price":15,"hasDiscount":false},{"id":"ITEM000005","num":3,"name":"方便面","unit":"袋","price":4.5,"hasDiscount":true}]';
+//
+//     expect(console.log).toHaveBeenCalledWith(expectText);
+//   });
+// });
 
-  it('should print array', () => {
-
-    const tags = [{"id":"ITEM000001","num":5,"name":"雪碧","unit":"瓶","price":3},
-      {"id":"ITEM000003","num":2.5,"name":"荔枝","unit":"斤","price":15},
-      {"id":"ITEM000005","num":3,"name":"方便面","unit":"袋","price":4.5}];
-
-    spyOn(console, 'log');
-
-    addDiscountStatus(tags)
-
-    const expectText = '[{"id":"ITEM000001","num":5,"name":"雪碧","unit":"瓶","price":3,"hasDiscount":true},{"id":"ITEM000003","num":2.5,"name":"荔枝","unit":"斤","price":15,"hasDiscount":false},{"id":"ITEM000005","num":3,"name":"方便面","unit":"袋","price":4.5,"hasDiscount":true}]';
-
-    expect(console.log).toHaveBeenCalledWith(expectText);
-  });
-});
-
-describe('setPrice()', () => {
-
-  it('should print array', () => {
-
-    const input = [{"id":"ITEM000001","num":5,"name":"雪碧","unit":"瓶","price":3,"hasDiscount":true,"payNum":4},
-      {"id":"ITEM000003","num":2.5,"name":"荔枝","unit":"斤","price":15,"hasDiscount":false,"payNum":2.5},
-      {"id":"ITEM000005","num":3,"name":"方便面","unit":"袋","price":4.5,"hasDiscount":true,"payNum":2}]
-
-    spyOn(console, 'log');
-
-    setPrices(input);
-
-    const expectText = '{"total":58.5,"discount":7.5,"items":[{"id":"ITEM000001","num":5,"name":"雪碧","unit":"瓶","price":3,"hasDiscount":true,"payNum":4,"subTotal":12},{"id":"ITEM000003","num":2.5,"name":"荔枝","unit":"斤","price":15,"hasDiscount":false,"payNum":2.5,"subTotal":37.5},{"id":"ITEM000005","num":3,"name":"方便面","unit":"袋","price":4.5,"hasDiscount":true,"payNum":2,"subTotal":9}]}';
-    expect(console.log).toHaveBeenCalledWith(expectText);
-  });
-});
+// describe('setPrice()', () => {
+//
+//   it('should print array', () => {
+//
+//     const input = [{"id":"ITEM000001","num":5,"name":"雪碧","unit":"瓶","price":3,"hasDiscount":true,"payNum":4},
+//       {"id":"ITEM000003","num":2.5,"name":"荔枝","unit":"斤","price":15,"hasDiscount":false,"payNum":2.5},
+//       {"id":"ITEM000005","num":3,"name":"方便面","unit":"袋","price":4.5,"hasDiscount":true,"payNum":2}]
+//
+//     spyOn(console, 'log');
+//
+//     setPrices(input);
+//
+//     const expectText = '{"total":58.5,"discount":7.5,"items":[{"id":"ITEM000001","num":5,"name":"雪碧","unit":"瓶","price":3,"hasDiscount":true,"payNum":4,"subTotal":12},{"id":"ITEM000003","num":2.5,"name":"荔枝","unit":"斤","price":15,"hasDiscount":false,"payNum":2.5,"subTotal":37.5},{"id":"ITEM000005","num":3,"name":"方便面","unit":"袋","price":4.5,"hasDiscount":true,"payNum":2,"subTotal":9}]}';
+//     expect(console.log).toHaveBeenCalledWith(expectText);
+//   });
+// });
 
 
 

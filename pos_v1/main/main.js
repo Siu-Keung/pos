@@ -28,7 +28,6 @@ function setBuyNum(idArray, goodsList) {
     }
     goods.num = count;
   }
-  return goodsList;
 }
 
 function loadGoodsDetails(goodsList) {
@@ -45,15 +44,7 @@ function loadGoodsDetails(goodsList) {
     goods.unit = goodsDetails.unit;
     goods.price = goodsDetails.price;
   }
-  return goodsList;
 }
-
-// function addDiscountStatus(goodsDetailsList) {
-//   for(let goodsDetails of goodsDetailsList){
-//       goodsDetails.hasDiscount = hasDiscount(goodsDetails, loadPromotions());
-//   }
-//   console.log(JSON.stringify(goodsDetailsList))
-// }
 
 function countDiscount(goodsDetails, discountList){
     for(let discount of discountList){
@@ -73,15 +64,8 @@ function promote_buyTwoGetOneFree(goodsDetails, discountBarcodes){
 
 function setPayNum(goodsDetailsList) {
   for (let goodsDetails of goodsDetailsList) {
-    // goodsDetails.payNum = goodsDetails.num;
-    // if (goodsDetails.hasDiscount) {
-    //   goodsDetails.payNum = goodsDetails.num - parseInt(goodsDetails.num / 3);
-    // }
-
     goodsDetails.payNum = goodsDetails.num;
     countDiscount(goodsDetails, loadPromotions());
-
-
   }
   return goodsDetailsList;
 }
@@ -101,7 +85,7 @@ function formatReceiptStr(receipt) {
   return str;
 }
 
-function setPrices(goodsList){
+function countPrices(goodsList){
 
     let totalPrice = 0, totalDiscount = 0;
     for(let goodsItem of goodsList){
@@ -120,10 +104,9 @@ function printReceipt(tags) {
   let goodsList = getGoodsIdList(tags);
   setBuyNum(tags, goodsList);
   loadGoodsDetails(goodsList);
-  // addDiscountStatus(goodsList);
   setPayNum(goodsList);
-  let finalResult = setPrices(goodsList);
-  let formatStr = formatReceiptStr(finalResult);
+  let result = countPrices(goodsList)
+  let formatStr = formatReceiptStr(result);
   console.log(formatStr);
 }
 
