@@ -110,5 +110,8 @@ function printReceipt(tags) {
   console.log(formatStr);
 }
 
+module.exports = {
+  getGoodsIdList
+};
 
 

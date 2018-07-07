@@ -15,5 +15,8 @@
     "eslint-plugin-node": "^2.0.0",
     "eslint-plugin-spellcheck": "0.0.7",
     "eslint-plugin-xo": "^0.5.1"
+  },
+  "dependencies": {
+    "jasmine": "^3.1.0"
   }
 }
