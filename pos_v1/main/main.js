@@ -4,16 +4,24 @@ const fixtures = require('../test/fixtures');
 
 //返回商品:数量数组，形如：[{'123456' : 4}]
 function getGoodsList(goodsIdArray) {
-    let uniqueIdList = getUniqueIdList(goodsIdArray);
-    console.log(JSON.stringify(uniqueIdList))
-    setBuyNum(goodsIdArray, uniqueIdList);
+    //获取商品id的回调函数
+    let getId = (barcodeStr) => {
+        return barcodeStr.split('-')[0];
+    };
+    let uniqueIdList = getUniqueIdList(goodsIdArray, getId);
+    //获取商品购买数量的回调函数
+    let getNum = (idAndNum) => {
+        let splitResult = idAndNum.split('-');
+        return splitResult.length === 2 ? parseFloat(splitResult[1]) : 1;
+    };
+    setBuyNum(goodsIdArray, uniqueIdList, getId, getNum);
     return uniqueIdList;
 }
 
-function getUniqueIdList(goodsIdArray) {
+function getUniqueIdList(goodsIdArray, getId) {
     let uniqueList = [];
-    for (let goodsId of goodsIdArray) {
-        let temp = goodsId.split('-')[0];
+    for (let barcodeStr of goodsIdArray) {
+        let temp = getId(barcodeStr);
         if (uniqueList.indexOf(temp) == -1) {
             uniqueList.push(temp);
         }
@@ -25,23 +33,18 @@ function getUniqueIdList(goodsIdArray) {
     return resultList;
 }
 
-function setBuyNum(idArray, goodsList) {
+function setBuyNum(idArray, goodsList, getId, getNum) {
     for (let goods of goodsList) {
         let count = 0;
         for (let idAndNum of idArray) {
-            let id = idAndNum.split('-')[0];
-            let num = 1;
-            if (idAndNum.split('-').length != 1)
-                num = parseFloat(idAndNum.split('-')[1]);
-            if (id === goods.id)
-                count += num;
+            if (getId(idAndNum) === goods.id)
+                count += getNum(idAndNum);
         }
         goods.num = count;
     }
 }
 
-function loadGoodsDetails(goodsList) {
-    let allGoodsList = fixtures.loadAllItems();
+function loadGoodsDetails(goodsList, allGoodsList) {
     for (let goods of goodsList) {
         let goodsDetails = null;
         for (let item of allGoodsList) {
@@ -112,8 +115,7 @@ function countPrices(goodsList) {
 
 function printReceipt(tags) {
     let goodsList = getGoodsList(tags);
-    setBuyNum(tags, goodsList);
-    loadGoodsDetails(goodsList);
+    loadGoodsDetails(goodsList, fixtures.loadAllItems());
     setPayNum(goodsList);
     let result = countPrices(goodsList)
     let formatStr = formatReceiptStr(result);
