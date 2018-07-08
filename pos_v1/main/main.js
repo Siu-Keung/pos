@@ -83,6 +83,20 @@ function setPayNum(goodsDetailsList) {
     return goodsDetailsList;
 }
 
+function countPrices(goodsList) {
+    let totalPrice = 0, totalDiscount = 0;
+    for (let goodsItem of goodsList) {
+        let subTotal = goodsItem.payNum * goodsItem.price;
+        let subDiscount = goodsItem.num * goodsItem.price - subTotal;
+        goodsItem.subTotal = subTotal;
+        totalPrice += subTotal;
+        totalDiscount += subDiscount;
+    }
+    let result = {total: totalPrice, discount: totalDiscount, items: goodsList};
+    console.log(JSON.stringify(result));
+    return result;
+}
+
 function formatReceiptStr(receipt) {
     let total = receipt.total, discount = receipt.discount, items = receipt.items;
     let str = '***<没钱赚商店>收据***';
@@ -96,21 +110,6 @@ function formatReceiptStr(receipt) {
     str += '\n节省：' + discount.toFixed(2) + '(元)';
     str += '\n**********************';
     return str;
-}
-
-function countPrices(goodsList) {
-
-    let totalPrice = 0, totalDiscount = 0;
-    for (let goodsItem of goodsList) {
-        let subTotal = goodsItem.payNum * goodsItem.price;
-        let subDiscount = goodsItem.num * goodsItem.price - subTotal;
-        goodsItem.subTotal = subTotal;
-        totalPrice += subTotal;
-        totalDiscount += subDiscount;
-    }
-    let result = {total: totalPrice, discount: totalDiscount, items: goodsList};
-    console.log(JSON.stringify(result));
-    return result;
 }
 
 function printReceipt(tags) {
